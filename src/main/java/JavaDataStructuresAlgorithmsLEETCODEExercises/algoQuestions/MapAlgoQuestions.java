@@ -1,10 +1,6 @@
 package JavaDataStructuresAlgorithmsLEETCODEExercises.algoQuestions;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MapAlgoQuestions {
@@ -115,21 +111,41 @@ public class MapAlgoQuestions {
         return new int[]{};
     }
 
+    /*
+    Идея заключается в следующем:
+        1) Ты идёшь по массиву и последовательно считаешь префиксную сумму
+            (сумма всех элементов от начала до текущего индекса).
+        2) Для удобного поиска используем HashMap, которая будет хранить все префиксные суммы на каждом шаге.
+        3) Как только текущая префиксная сумма минус target уже встречалась ранее, это означает,
+        4) что мы нашли нужный подмассив, сумма которого равна target. Индексы между этими
+            двумя префиксными суммами и будут ответом.
+     */
     //вернуть подмассив из 2 чисел, которые являются индексами чисел от которого до которого сумма будет равна target
     public static int[] subarraySum(int[] nums, int target) {
-        Map<Integer, Integer> sumIndex = new HashMap<>();
-        sumIndex.put(0, -1);
-        int currentSum = 0;
+        // Хэшмап будет хранить суммы как ключи и индексы как значения
+        Map<Integer, Integer> prefixSums = new HashMap<>();
+        prefixSums.put(0,
+                -1); // Изначально кладем сумму 0, чтобы учесть подмассивы с нулевого индекса
+
+        int currentSum = 0; // Переменная для хранения префиксной суммы
 
         for (int i = 0; i < nums.length; i++) {
-            currentSum += nums[i];
-            if (sumIndex.containsKey(currentSum - target)) {
-                return new int[]{sumIndex.get(currentSum - target) + 1, i};
+            currentSum += nums[i]; // Увеличиваем текущую сумму на значение элемента
+
+            // Проверяем, существует ли эта сумма ранее минус target в hashmap
+            if (prefixSums.containsKey(currentSum - target)) {
+                // Если нашли нужную разницу, возвращаем индексы начала и конца подмассива
+                int startIndex = prefixSums.get(currentSum - target) + 1;
+                return new int[]{startIndex, i};  // Возвращаем массив с двумя индексами
             }
-            sumIndex.put(currentSum, i);
+
+            // В противном случае, сохраняем текущую сумму и её индекс
+            prefixSums.put(currentSum,
+                    i);
         }
 
-        return new int[]{};
+        // Если подмассив не найден, возвращаем пустой массив
+        return new int[0];
     }
 
 }

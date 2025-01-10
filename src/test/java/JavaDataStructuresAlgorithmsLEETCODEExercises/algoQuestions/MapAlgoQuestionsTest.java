@@ -45,7 +45,7 @@ public class MapAlgoQuestionsTest {
     public void test_subAray(){
         var result = subarraySum(new int[]{1, 2, 3, 4, 5},9);
         assert result[0] == 1;
-        assert result[2] == 3;
+        assert result[1] == 3;
     }
 
 

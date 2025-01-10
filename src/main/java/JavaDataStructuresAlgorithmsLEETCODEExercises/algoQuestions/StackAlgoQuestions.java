@@ -1,5 +1,7 @@
 package JavaDataStructuresAlgorithmsLEETCODEExercises.algoQuestions;
 
+import java.util.HashMap;
+import java.util.List;
 import java.util.Stack;
 
 public class StackAlgoQuestions {
@@ -45,5 +47,4 @@ public class StackAlgoQuestions {
         }
         return tempStack;
     }
-
 }
