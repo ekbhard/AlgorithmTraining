@@ -16,6 +16,23 @@ public class BinarySearchTree {
 		}
 	}
 
+	public static boolean equals(Node n1, Node n2) {
+		if (n1 == null && n2 == null) {
+			return true;
+		}
+
+		if (n1 == null || n2 == null) {
+			return false;
+		}
+
+		if (n1.value != n2.value) {
+			return false;
+		}
+		return equals(n1.left, n2.left) && equals(n1.right, n2.right);
+	}
+
+
+
 	public Node getRoot() {
 		return root;
 	}
