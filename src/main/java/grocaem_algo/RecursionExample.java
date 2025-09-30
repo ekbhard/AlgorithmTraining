@@ -1,5 +1,7 @@
 package grocaem_algo;
 
+import java.util.Scanner;
+
 public class RecursionExample {
 
 

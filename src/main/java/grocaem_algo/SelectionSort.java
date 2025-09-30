@@ -1,5 +1,7 @@
 package grocaem_algo;
 
+import java.io.*;
+
 public class SelectionSort {
 
 	public int[] selectionSort(int[] array) {
@@ -20,5 +22,18 @@ public class SelectionSort {
 		}
 
 		return array;
+	}
+
+
+	public static void main(String[] args) throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader("plotInput.txt"));
+		PrintWriter pw = new PrintWriter(new FileWriter("output.txt"));
+
+		String[] parts = br.readLine().split("");
+		int first = Integer.parseInt(parts[0]);
+		int second = Integer.parseInt(parts[2]);
+		pw.println(first + second);
+		pw.close();
+		br.close();
 	}
 }
