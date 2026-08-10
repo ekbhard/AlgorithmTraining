@@ -4,6 +4,7 @@ package yandex_algo
 fun main() {
 
     println(canPlaceFlowers(intArrayOf(1, 0, 0, 0, 1), 1))
+
     println(canPlaceFlowers(intArrayOf(1, 0, 0, 0, 1), 2))
     println(canPlaceFlowers(intArrayOf(1, 0, 1, 0, 1, 0, 1), 1))
 

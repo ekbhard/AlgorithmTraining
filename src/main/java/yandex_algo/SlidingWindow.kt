@@ -64,6 +64,21 @@ fun main() {
     println(characterReplacement("ABAB", 2))//4
     println(characterReplacement("AABABBA", 1))//4
     println(characterReplacement("AABHGLBBBAGHV", 1))//4
+
+
+    println("-----numberOfSubarrays----")
+    numberOfSubarrays(intArrayOf(1, 1), 1)//2
+    numberOfSubarrays(intArrayOf(2, 2), 1)//0
+    numberOfSubarrays(intArrayOf(2, 2, 4, 6), 3)//0
+    numberOfSubarrays(intArrayOf(1, 1, 2, 1, 1), 3)//2
+    numberOfSubarrays(intArrayOf(2, 2, 2, 1, 2, 2, 1, 2, 2, 2), 2)//2
+
+    println("----shiftingLetters--")
+    println(shiftingLetters("aaa", intArrayOf(1, 2, 3)))//gfd
+    println(shiftingLetters("abc", intArrayOf(3, 5, 9)))//rpl
+    println(shiftingLetters("a", intArrayOf(52)))//a
+    println(shiftingLetters("a", intArrayOf(51)))//z
+    println(shiftingLetters("mkgfzkkuxownxvfvxasy", intArrayOf(505870226,437526072,266740649,224336793,532917782,311122363,567754492,595798950,81520022,684110326,137742843,275267355,856903962,148291585,919054234,467541837,622939912,116899933,983296461,536563513)))//wqqwlcjnkphhsyvrkdod
 }
 
 
@@ -214,25 +229,79 @@ fun findAnagrams(s: String, p: String): List<Int> {
  */
 
 fun characterReplacement(s: String, k: Int): Int {
-    var result = 0
+    if (s.length < 2) return s.length // return 0 if 0 and 1 if 1
 
-    for ((i, n) in s.withIndex()) {
-        var temp = k
-        var right = i + 1
-        var left = if (i == 0) 0 else i - 1
-        while ((left >= 0 || right <= s.length - 1) && ((s[right] == n && s[left] == n) || temp > 0)) {
-            if (s[right] != n && temp > 0) {
-                temp--
-            } else if (s[left] != n && temp > 0) {
-                temp--
-            } else {
-                break
-            }
-            right++
-            left--
+    var longestStreak = 0
+    var maxCharFreq = 0
+    val charFrequency = Array(26) { 0 }
+
+    var start = 0
+    for (end in s.indices) {
+        val charIndex = s[end] - 'A'
+        charFrequency[charIndex]++ // increase the char occurrence
+
+        maxCharFreq = max(maxCharFreq, charFrequency[charIndex]) // update the current maxCharFreq
+
+        if (end - start - maxCharFreq + 1 > k) {
+            // Decrease the character at the start of the window before moving the start of the window to the next character
+            charFrequency[s[start] - 'A']--
+            start++
         }
-        result = max(result, right - left)
+        longestStreak = max(longestStreak, end - start + 1)
+    }
+    return longestStreak
+}
+
+/**
+ * Given an array of integers nums and an integer k.
+ * A continuous subarray is called nice if there are k odd numbers on it.
+ *
+ * Return the number of nice sub-arrays.
+ */
+
+fun numberOfSubarrays(nums: IntArray, k: Int): Int {
+    var count = 0
+    var currentSum = 0
+    val prefixSums = mutableMapOf<Int, Int>()
+    prefixSums[0] = 1
+
+    for (num in nums) {
+        if (num % 2 != 0) {
+            currentSum++
+        }
+        if (prefixSums.containsKey(currentSum - k)) {
+            count += prefixSums[currentSum - k]!!
+        }
+        prefixSums[currentSum] = prefixSums.getOrDefault(currentSum, 0) + 1
+
+    }
+    return count
+}
+
+/**
+ * 848. Shifting Letters
+ */
+
+fun shiftingLetters(s: String, shifts: IntArray): String {
+    var array = CharArray(s.length)
+    var sum = 0
+    for ((index, char) in s.withIndex().reversed()) {
+        sum = (sum + shifts[index]) % 26  // sum всегда в -25..25
+        if (sum < 0) sum += 26            // на случай отрицательных (если будут)
+        val newChar = shiftChar(char, sum)
+        array[index] = newChar
     }
 
-    return result
+    return array.concatToString()
+
 }
+
+fun shiftChar(ch: Char, shift: Int): Char {
+    require(ch in 'a'..'z') { "Только строчные латинские буквы" }
+    val base = 'a'.code
+    var offset = ch.code - base          // 0..25
+    offset = (offset + shift) % 26
+    if (offset < 0) offset += 26         // приводим к 0..25
+    return (base + offset).toChar()
+}
+
